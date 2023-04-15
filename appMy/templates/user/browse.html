@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block css %}
+<style>
+    .card img:hover {
+        border: 4px solid white;
+    }
+    
+    button:hover {
+        border: 1px solid white;
+        color: white !important;
+    }
+    label{
+        padding-top: 20px;
+        font-size: 22px;
+    }
+    .dropdownhid{
+        display: none;
+    }
+    .alert-danger{
+        animation: danger 8s;
+    }
+    @keyframes danger {
+        100%{
+            opacity: 0;
+        }
+    }
+</style>
+{% endblock css %}
+    
+
+{% block nonheader %}
+
+    
+    {% for i in messages %}
+    <div style="width: 100%; position: absolute; top: 0; z-index: 100; display: flex; justify-content: center;">
+        <div class="alert alert-danger" role="alert">
+            {{ i }}
+        </div>
+    </div>
+    {% endfor %}
+        
+    
+    <nav class="navbar">
+        <div class="container">
+            <a href="" class="navbar-brand">
+                <img src="{% static 'img/netflix_logo.png' %}" alt="">
+            </a>
+        </div>
+    </nav>
+
+    <!-- profil seçimi -->
+    <div class="container">
+        <div class="row w-75 m-auto bg-black bg-opacity-25">
+            <h1 class="text-center text-light">Kimler İzliyor?</h1>
+            
+            {% for i in profils %}
+            <div class="col-3 mt-5 mb-5">
+                <div class="dropdown dropdownhid">
+                    <button class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Profil Seçenekleri
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#update{{ i.id }}">Düzenle</a></li>
+                        <!-- <li><a class="dropdown-item" href="/profileDelete/{{ i.id }}/">Profili Sil</a></li> -->
+                        <li><a class="dropdown-item" href="{% url 'profileDelete' i.id %}">Profili Sil</a></li>
+                    </ul>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="update{{ i.id }}" tabindex="-1" aria-labelledby="updateLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <form method="POST" class="modal-content" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="updateLabel">Profil Düzenle</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="">Profil Adı</label>
+                                        <input type="text" required name="profile-name" value="{{ i.name }}" class="form-control form-control-lg"
+                                            placeholder="Profil Adı">
+                    
+                                        <label for="">Profil Resmi</label>
+                                        <input type="file" name="image" id="" class="form-control">
+                    
+                                        <label for="">Yetişkin Şifresi</label>
+                                        <input type="password" name="password" id="password" value="{{ i.password }}" class="form-control form-control-lg mt-2">
+                                    </div>
+
+                                    <div class="form-check text-start">
+                                        <input type="checkbox" name="active" value="True" {% if i.password_active == True %} checked {% endif %} id="password-active" class="form-check-input">
+                                        <label for="password-active" class="form-check-label p-0 fs-6">
+                                            Yetişkin Şifresi Aktif
+                                        </label>
+                                    </div>
+                    
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="hidden" name="profil-id" value="{{ i.id }}">
+                                    <button name="button" value="update" type="submit" class="btn btn-primary">Profil Oluştur</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+
+
+                <a href="{% url 'indexBrowse' i.slug %}" {% if i.password_active %} data-bs-toggle="modal" data-bs-target="#profilpassword{{ i.id }}" {% endif %} class="text-decoration-none text-secondary">
+                    <div class="card bg-transparent">
+                        {% if i.image %}
+                        <img src="{{ i.image.url }}" height="200px" class="card-img-top" alt="">
+                        {% else %}
+                        <img src="{% static 'img/smile-icon.jpg' %}" height="200px" class="card-img-top" alt="">
+                        {% endif %}
+                            
+                        <div>
+                            <h5 class="card-title text-center ">{{ i.name }}</h5>
+                        </div>
+                        
+                    </div>
+                </a>
+
+                <!-- Modal -->
+                <div class="modal fade" id="profilpassword{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form method="POST" class="modal-content" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <div class="mb-3">
+                                    <label for="password">Yetişkin Şifresi</label>
+                                    <input type="password" name="profil-password" id="password" class="form-control form-control-lg mt-2">
+                                </div>                            
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" name="profilid" value="{{ i.id }}">
+                                <button name="button" value="login-profil" type="submit" class="btn btn-primary">Giriş</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+            </div>
+            {% endfor %}
+
+          
+            {% if profils|length < 4 %}
+            <div class="col-3 mt-5 mb-5">
+                <a href="#" class="text-decoration-none text-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <div class="card bg-transparent">
+                        <img src="{% static 'img/user-plus-solid.svg' %}" height="200px" class="p-5 card-img-top" alt="">
+                        <div>
+                            <h5 class="card-title text-center ">Yeni Profil Ekle</h5>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form method="POST" class="modal-content" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Profil Ekle</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="">Profil Adı</label>
+                                    <input type="text" required name="profile-name" class="form-control form-control-lg" placeholder="Profil Adı">
+
+                                    <label for="">Profil Resmi</label>
+                                    <input type="file" name="image" id="" class="form-control">
+                                    
+                                    <label for="password">Yetişkin Şifresi</label>
+                                    <input type="password" name="password" id="password" class="form-control form-control-lg mt-2">
+                                </div>
+                                
+                                
+                                <div class="form-check text-start">
+                                    <input type="checkbox" name="active" value="True" id="password-active" class="form-check-input">
+                                    <label for="password-active" class="form-check-label p-0 fs-6">
+                                        Yetişkin Şifresi Aktif
+                                    </label>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button name="button" value="create" type="submit" class="btn btn-primary">Profil Oluştur</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+            </div>
+            {% endif %}
+            
+
+            <div class="buton mb-5 text-center">
+                <button class="bg-dark text-secondary w-50 p-2 " onclick="showButton(this)">Profil Yönetimi</button>
+            </div>
+        </div>
+    </div>
+    <script>
+    
+        var active = true;
+        function showButton() {
+            const dropdown = document.querySelectorAll(".dropdownhid");
+
+            
+            dropdown.forEach((e)=>{
+                console.log(e);
+                if (active){
+                    e.style.display = "block";
+                }else{
+                    e.style.display = "none";
+                }
+            })
+            
+            active = !active;
+        }
+    
+    </script>
+{% endblock nonheader %}

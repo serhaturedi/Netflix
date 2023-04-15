@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block css %}
+<style>
+    h2 {
+        text-align: left;
+        font-weight: bold;
+    }
+
+    .hero-image {
+        height: 100%;
+    }
+
+    .hero-text {
+        background-color: rgba(0, 0, 0, 0.700);
+        width: 500px;
+        top: 50%;
+    }
+
+    .hero-text2 {
+        width: 75%;
+        margin: auto;
+    }
+
+    .form-control {
+        background-color: rgb(180, 180, 180);
+        border: none;
+    }
+
+    .p-grey {
+        color: grey;
+    }
+
+    .con-footer {
+        position: absolute;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.700);
+    }
+
+    @media screen and (max-width: 700px) {
+        .hero-image {
+            background-image: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 1)), url(img/arkaplan.jpg);
+        }
+    }
+</style>
+
+{% endblock css %}
+
+
+{% block nonheader %}
+
+
+<div class="hero-image">
+    <!-- navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="" class="navbar-brand"><img src="{% static 'img/netflix_logo.png' %}" alt=""></a>
+        </div>
+    </nav>
+
+    <div class="hero-text">
+
+
+
+        <!-- form -->
+        <form action="" method="POST" class="hero-text2 mt-5 mb-5">
+
+            {% for i in messages %}
+            <p class="text-danger">{{ i }}</p>
+            {% endfor %}
+
+            {% csrf_token %}
+            <h2>Oturum Aç</h2>
+
+            <div class="mb-3">
+                <div class="d-flex ">
+                    <input type="text" name="name" class="w-50 form-control form-control-lg mt-2"
+                        placeholder="Ad">
+                    <input type="text" name="surname" class="w-50 form-control form-control-lg mt-2 ms-2"
+                        placeholder="Soyad">
+                </div>
+                <input type="email" name="email" class="form-control form-control-lg mt-2"
+                    placeholder="E-mail">
+                <input type="tel" name="tel" class="form-control form-control-lg mt-2"
+                    placeholder="Telefon">
+                <input type="text" name="username" class="form-control form-control-lg mt-2"
+                    placeholder="Kullanıcı adı">
+                <input type="password" name="password1" id="password" placeholder="Şifre" class="form-control form-control-lg mt-2">
+                <input type="password" name="password2" id="password" placeholder="Yeniden Şifre" class="form-control form-control-lg mt-2">
+            </div>
+            <div class="d-grid gap-2">
+                <button class="btn btn-danger btn-lg" type="submit">Oturum Aç</button>
+            </div>
+
+            <p class="p-grey">
+                Zaten bir hesabım var. <a href="/loginUser/">Giriş</a>
+            </p>
+        </form>
+    </div>
+
+
+</div>
+
+{% endblock nonheader %}
