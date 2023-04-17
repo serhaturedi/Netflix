@@ -6,3 +6,6 @@ class Post(models.Model):
     image=models.ImageField(("Dizi-Film"), upload_to=None, max_length=None)
     active=models.BooleanField(("Göster"))
     category=models.CharField(("Kategori"), max_length=50)
+
+    def __str__(self):
+        return self.name
