@@ -1,10 +1,9 @@
-
 {% extends 'base.html' %}
 {% load static %}
 
 
 
-{% block css %}
+<!-- {% block css %}
     <style>
         @media (max-width: 767px){
             .carousel-inner.carousel-item > div
@@ -41,7 +40,7 @@
             transform: translateX(0)
         }
     </style>
-{% endblock css %}
+{% endblock css %} -->
     
 
 
@@ -61,7 +60,8 @@
       
       <div class="container text-center my-3">
             <h3 class="text-light">İzlemeye Başlayın</h3>
-              <div class="row mx-auto my-auto justify-content-center">
+
+              <!-- <div class="row mx-auto my-auto justify-content-center">
                   <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
                       <div class="carousel-inner" role="listbox">
                           {% for i in movieFilter %}
@@ -71,7 +71,7 @@
                                 <div class="card-img"> 
                            <img src="{{ i.image.url }}" class="img-fluid">
                         </div> 
-                        <!-- <div class="card-img-overlay">{{ i.name }}</div> -->
+                        <div class="card-img-overlay">{{ i.name }}</div>
                         </div> 
                        </div> 
                     </div> 
@@ -85,7 +85,20 @@
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 </a> 
             </div> 
-            </div> 
+            </div>  -->
+
+            <div class="row">
+                {% for i in movieFilter %}
+                    <div class="col-3">
+                        <div class="card mt-3" style="width: 15rem; background-color: black; color: white;">
+                            <img src="{{ i.image.url }}" class="card-img-top" alt="Sunset Over the Sea"/>
+                            <div class="card-body">
+                              <p class="card-text">{{ i.name }}</p>
+                            </div>
+                          </div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
 
 {% endblock body %}
@@ -95,7 +108,7 @@
 
 
 
-{% block js %}
+<!-- {% block js %}
     <script>
         let items = document.querySelectorAll('.carousel .carousel-item')
 
@@ -112,5 +125,5 @@ items.forEach((el) => {
     }
 })
     </script>
-{% endblock js %}
+{% endblock js %} -->
     
